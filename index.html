@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心理治疗取向评估量表</title>
+    <link rel="stylesheet" href="guide.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            height: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+            position: relative;
+        }
+        .progress-text {
+            position: absolute;
+            right: 10px;
+            color: #FFFFFF; /* 使用纯白色替代半透明白色 */
+            text-shadow: 0 0 3px rgba(75, 106, 155, 0.5); /* 添加文字阴影增加可读性 */
+            font-weight: bold;
+            line-height: 20px;
+            font-size: 12px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .instructions {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .question {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .question-number {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #3498db;
+        }
+        .options {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .option {
+            text-align: center;
+            flex: 1;
+        }
+        .option label {
+            display: block;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+        .option label:hover {
+            background-color: #e8f4fc;
+        }
+        .option input[type="radio"] {
+            margin-right: 5px;
+        }
+        .btn-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .results {
+            display: none;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .calculation {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .highest {
+            background-color: #d4edda;
+        }
+        .answered {
+            background-color: #e8f4fc;
+        }
+        .current-focus {
+            border-left: 4px solid #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+        }
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <h1>心理治疗取向评估量表</h1>
+    
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-text">0/76</div>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h3>指导说明</h3>
+        <p>请根据您对每个陈述的认同程度，选择相应的选项：</p>
+        <p>1 = 强烈不同意，2 = 不同意，3 = 轻微不同意，4 = 中立，5 = 轻微同意，6 = 同意，7 = 强烈同意</p>
+    </div>
+    
+    <div class="control-buttons">
+        <button id="shuffle" class="btn btn-secondary">打乱题目顺序</button>
+        <button id="restore" class="btn btn-secondary">恢复默认顺序</button>
+        <button id="test-fill" class="btn btn-secondary">一键测试填充</button>
+    </div>
+    
+    <div id="questionnaire">
+        <!-- 问题将通过JavaScript动态生成 -->
+    </div>
+    
+    <div class="btn-container">
+        <button id="calculate" class="btn">计算结果</button>
+    </div>
+    
+    <div id="results" class="results">
+        <h2>评估结果</h2>
+        <div id="calculation-details"></div>
+        <table id="results-table">
+            <thead>
+                <tr>
+                    <th>心理治疗取向</th>
+                    <th>得分</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 结果将通过JavaScript动态生成 -->
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        // 量表问题数据
+        const originalQuestions = [
+            { id: 1, text: "移情在心理治疗中很有价值，因为它为来访者提供了重新体验童年早期感受的机会。", eng_text: "Transference is valuable in therapy because it gives clients the opportunity to re-experience early childhood feelings." },
+            { id: 2, text: "人格的社会决定因素比心理性决定因素更为重要。", eng_text: "Social determinants of personality are more important than psychological determinants." },
+            { id: 3, text: "治疗师应当挑战来访者不真实的生活方式。", eng_text: "Therapists should challenge clients' inauthentic ways of living." },
+            { id: 4, text: "我喜欢设计实验来增强来访者对自身行为的自我意识以及他们如何进行这些行为。", eng_text: "I like to design experiments to increase clients' self-awareness of their behaviors and how they do them." },
+            { id: 5, text: "询问来访者最早期的记忆是很重要的。", eng_text: "It is important to ask clients about their earliest memories." },
+            { id: 6, text: "以具体、明确和客观的方式陈述治疗目标对帮助来访者很重要。", eng_text: "It is important to state therapeutic goals in concrete, specific, and objective terms to help clients." },
+            { id: 7, text: "虽然被他人爱和接纳是令人向往的，但这并非必要。", eng_text: "Although it is desirable to be loved and accepted by others, it is not necessary." },
+            { id: 8, text: "治疗应强调来访者与其家庭的互动。", eng_text: "Therapy should emphasize clients' interactions with their families." },
+            { id: 9, text: "大多数来访者的基本问题是他们要么处于一段不满意的现有关系中，要么缺乏一段重要的关系。", eng_text: "The basic problem for most clients is that they are either in an unsatisfying existing relationship or lack an important relationship." },
+            { id: 10, text: "良好的来访者-治疗师关系是行为改变发生的必要但非充分条件。", eng_text: "A good client-therapist relationship is a necessary but not sufficient condition for behavior change to occur." },
+            { id: 11, text: "治疗师提供的治疗条件比其使用的技术更为重要。", eng_text: "The therapeutic conditions provided by the therapist are more important than the techniques used." },
+            { id: 12, text: "治疗的适当目标是社会变革和个人变革。", eng_text: "An appropriate goal of therapy is social change as well as individual change." },
+            { id: 13, text: "尽管我们都会生活在生活中遇到某些情况，但我们并非环境的受害者。我们是我们选择成为的样子。", eng_text: "Although we all encounter certain situations in life, we are not victims of our environment. We are who we choose to become." },
+            { id: 14, text: "治疗应关注来访者的感受、当下意识以及意识障碍。", eng_text: "Therapy should focus on clients' feelings, present awareness, and blocks to awareness." },
+            { id: 15, text: "认知是我们感受和行为的主要决定因素。", eng_text: "Cognition is the primary determinant of our emotions and behavior." },
+            { id: 16, text: "太多的治疗关注问题而非解决方案。", eng_text: "Too much therapy focuses on problems rather than solutions." },
+            { id: 17, text: "治疗师的一致性或真诚性是建立治疗关系的最重要条件之一。", eng_text: "The therapist's congruence or genuineness is one of the most important conditions for establishing a therapeutic relationship." },
+            { id: 18, text: "了解来访者在原生家庭中的位置很重要，这有助于我更好地理解他们在生活中所采取的角色。", eng_text: "It is important to understand clients' positions in their family of origin to better understand the roles they take in life." },
+            { id: 19, text: "在治疗中，我认为比起谈论感受和经历，让来访者在治疗过程中重新体验这些感受更为重要。", eng_text: "In therapy, I believe it is more important for clients to re-experience feelings in the therapy session than to talk about feelings and experiences." },
+            { id: 20, text: "当家庭中的个体出现问题时，治疗师可以通过检查家庭沟通和关系问题来提供帮助。", eng_text: "When individuals in families have problems, therapists can help by examining family communication and relationship issues." },
+            { id: 21, text: "当来访者理解其问题的历史根源，并明确了童年问题如何影响当前情况时，他们更容易终止治疗。", eng_text: "Clients are more likely to terminate therapy when they understand the historical roots of their problems and how childhood issues affect their current situation." },
+            { id: 22, text: "心理治疗的主要主题涉及意义、自由、责任、孤独、疏离、死亡及其对生活的影响。", eng_text: "The major themes of psychotherapy involve meaning, freedom, responsibility, isolation, alienation, death, and their impact on life." },
+            { id: 23, text: "每个人都发展出独特的生活方式，我将在治疗中探索这一点。", eng_text: "Each person develops a unique lifestyle, which I will explore in therapy." },
+            { id: 24, text: "治疗师应鼓励来访者对他们在世界中的选择方式承担责任。", eng_text: "Therapists should encourage clients to take responsibility for how they choose in the world." },
+            { id: 25, text: "治疗师通过恢复健康的家庭组织结构来帮助来访者产生变化。", eng_text: "Therapists help clients create change by restoring healthy family organizational structures." },
+            { id: 26, text: "治疗的最基本目标是创造一个心理安全的氛围，使来访者感到足够安全以放下防御。", eng_text: "The most basic goal of therapy is to create a psychological atmosphere of safety where clients feel safe enough to drop their defenses." },
+            { id: 27, text: "治疗师应从不同的理论体系中选择，以整合它们。", eng_text: "Therapists should select from different theoretical systems to integrate them." },
+            { id: 28, text: "治疗师咨询来访者的家庭成员很重要。", eng_text: "It is important for therapists to consult with family members of clients." },
+            { id: 29, text: "关注来访者的弱点很少能产生卓越。如果追求卓越，就必须关注来访者的优势。", eng_text: "Focusing on clients' weaknesses rarely produces excellence. If excellence is pursued, one must focus on clients' strengths." },
+            { id: 30, text: "否认、压抑、理智化和其他防御机制是理解治疗的核心。", eng_text: "Denial, repression, rationalization, and other defense mechanisms are central to understanding therapy." },
+            { id: 31, text: "教导来访者应对问题的技巧很重要。", eng_text: "It is important to teach clients skills for coping with problems." },
+            { id: 32, text: "在治疗方面没有一种最佳理论。（整合性）", eng_text: "There is no one best theory in terms of treatment. (Integrative)" },
+            { id: 33, text: "我不认为治疗师应该只精通一种心理治疗理论。", eng_text: "I do not believe that therapists should be skilled in only one theory of psychotherapy." },
+            { id: 34, text: "人们追求自我实现，治疗师应该熟练掌握促进这一过程的技能。", eng_text: "People strive for self-actualization, and therapists should be skilled in facilitating this process." },
+            { id: 35, text: "非理性信念是情绪困扰的主要原因。", eng_text: "Irrational beliefs are the primary cause of emotional disturbance." },
+            { id: 36, text: "人们学习适应性和不适应性行为。", eng_text: "People learn adaptive and maladaptive behaviors." },
+            { id: 37, text: "成功的生活与个体追求卓越的程度相关。", eng_text: "Successful living is related to the degree to which individuals strive for excellence." },
+            { id: 38, text: "来访者是自身问题的专家，而非治疗师。", eng_text: "Clients are the experts on their problems, not therapists." },
+            { id: 39, text: "人类行为由环境中的强化和惩罚模式决定。", eng_text: "Human behavior is determined by patterns of reinforcement and punishment in the environment." },
+            { id: 40, text: "事件本身不会引起情绪困扰。相反，是我们对这些事件的评价和信念导致了困扰。", eng_text: "Events themselves do not cause emotional disturbance. Rather, it is our evaluations and beliefs about these events that cause disturbance." },
+            { id: 41, text: "评估来访者当前行为是来访者的责任，而非治疗师的责任。", eng_text: "It is the client's responsibility to evaluate their current behavior, not the therapist's." },
+            { id: 42, text: "以下都是基本心理需求：归属感、权力感、自由感、乐趣。", eng_text: "The following are all basic psychological needs: belonging, power, freedom, and fun." },
+            { id: 43, text: "有时人们选择自我毁灭性行为。", eng_text: "Sometimes people choose self-destructive behavior." },
+            { id: 44, text: "在咨询中灌输希望对来访者很重要。", eng_text: "It is important to instill hope in clients in counseling." },
+            { id: 45, text: "治疗的一个适当目标是与来访者进行对话，帮助他们为生活和行为发展新的意义。", eng_text: "An appropriate goal of therapy is to engage in dialogue with clients to help them develop new meanings for living and behaving." },
+            { id: 46, text: "来访者有时陷入一种生活模式中，这种模式充满问题，但已经为他们工作了一段时间。", eng_text: "Clients sometimes get stuck in a pattern of living that is problematic but has worked for them for a while." },
+            { id: 47, text: "叙事咨询策略的目标是帮助来访者创造更令人满意的故事。", eng_text: "The goal of narrative counseling strategies is to help clients create more satisfying stories." },
+            { id: 48, text: "治疗师应被视为信息的唯一来源之一，而非专家。", eng_text: "Therapists should be viewed as one source of information rather than as experts." },
+            { id: 49, text: "当有观众欣赏和支持这些故事时，来访者的故事会在他们的生活中占据主导地位。", eng_text: "Clients' stories become dominant in their lives when there is an audience to appreciate and support these stories." },
+            { id: 50, text: "治疗应帮助来访者参与外化对话。", eng_text: "Therapy should help clients engage in externalizing conversations." },
+            { id: 51, text: "通过评估家庭成员之间的互动，可以最好地理解来访者。", eng_text: "Clients are best understood by assessing the interactions among family members." },
+            { id: 52, text: "治疗师应该是社会变革的代理人。", eng_text: "Therapists should be agents of social change." },
+            { id: 53, text: "关注来访者的优势比关注病理学更重要。", eng_text: "It is more important to focus on clients' strengths than on pathology." },
+            { id: 54, text: "多元文化意识对有效咨询至关重要。", eng_text: "Multicultural awareness is essential for effective counseling." },
+            { id: 55, text: "治疗师应该帮助来访者识别和建立他们的优势和资源。", eng_text: "Therapists should help clients identify and build on their strengths and resources." },
+            { id: 56, text: "希望是治疗成功的关键因素。", eng_text: "Hope is a key factor in successful therapy." },
+            { id: 57, text: "童年经历对成人行为有重大影响。", eng_text: "Childhood experiences have a significant impact on adult behavior." },
+            { id: 58, text: "我相信'此时此地'的体验比过去的经历更重要。", eng_text: "I believe that 'here and now' experiences are more important than past experiences." },
+            { id: 59, text: "无意识过程影响行为。", eng_text: "Unconscious processes influence behavior." },
+            { id: 60, text: "治疗师必须了解文化差异如何影响治疗过程。", eng_text: "Therapists must understand how cultural differences affect the therapeutic process." },
+            { id: 61, text: "治疗师的同理心对治疗成功至关重要。", eng_text: "The therapist's empathy is essential for successful therapy." },
+            { id: 62, text: "来访者需要学习更好的行为选择。", eng_text: "Clients need to learn better behavioral choices." },
+            { id: 63, text: "存在主义焦虑是人类经验的核心部分。", eng_text: "Existential anxiety is a central part of the human experience." },
+            { id: 64, text: "治疗师应该考虑社会政治因素如何影响来访者。", eng_text: "Therapists should consider how sociopolitical factors affect clients." },
+            { id: 65, text: "治疗应该关注解决方案而非问题。", eng_text: "Therapy should focus on solutions rather than problems." },
+            { id: 66, text: "种族和文化身份对心理健康有重要影响。", eng_text: "Racial and cultural identity have important effects on mental health." },
+            { id: 67, text: "觉察是治疗变化的核心。", eng_text: "Awareness is central to therapeutic change." },
+            { id: 68, text: "行为改变需要系统的强化计划。", eng_text: "Behavior change requires systematic reinforcement plans." },
+            { id: 69, text: "整合多种治疗方法比坚持单一理论更有效。", eng_text: "Integrating multiple therapeutic approaches is more effective than adhering to a single theory." },
+            { id: 70, text: "灵活运用不同理论技术可以更好地满足来访者的需求。", eng_text: "Flexibly applying techniques from different theories better meets clients' needs." },
+            { id: 71, text: "人们通过讲述和重新讲述他们的生活故事来创造意义。", eng_text: "People create meaning by telling and retelling their life stories." },
+            { id: 72, text: "性别角色期望对心理健康有重大影响。", eng_text: "Gender role expectations have significant impacts on mental health." },
+            { id: 73, text: "家庭系统比个体更重要。", eng_text: "Family systems are more important than individuals." },
+            { id: 74, text: "文化背景塑造了人们的世界观和治疗期望。", eng_text: "Cultural backgrounds shape people's worldviews and expectations for therapy." },
+            { id: 75, text: "社会不平等直接影响心理健康。", eng_text: "Social inequalities directly affect mental health." },
+            { id: 76, text: "权力关系应在治疗中被探讨和挑战。", eng_text: "Power relationships should be explored and challenged in therapy." }
+        ];
+
+        // 量表分类数据
+        const categories = [
+            { name: "精神分析/心理动力学", items: [1, 21, 30, 57, 59] },
+            { name: "阿德勒学派", items: [2, 5, 18, 23, 37] },
+            { name: "行为主义", items: [6, 10, 36, 39, 68] },
+            { name: "认知疗法", items: [7, 15, 31, 35, 40] },
+            { name: "现实治疗", items: [9, 41, 42, 43, 62] },
+            { name: "存在主义", items: [3, 13, 22, 24, 63] },
+            { name: "人本主义", items: [11, 17, 26, 34, 61] },
+            { name: "格式塔疗法", items: [4, 14, 19, 58, 67] },
+            { name: "多元文化咨询", items: [54, 60, 64, 66, 74] },
+            { name: "女性主义治疗", items: [12, 52, 72, 75, 76] },
+            { name: "家庭治疗", items: [20, 25, 28, 51, 73] },
+            { name: "解决方案聚焦治疗", items: [16, 38, 46, 48, 65] },
+            { name: "叙事治疗", items: [45, 47, 49, 50, 71] },
+            { name: "优势本位治疗", items: [29, 44, 53, 55, 56] },
+            { name: "整合治疗方法", items: [27, 33, 32, 69, 70] }
+        ];
+
+        // 当前使用的问题数组（可能是原始顺序或打乱后的顺序）
+        let questions = [...originalQuestions];
+        
+        // 生成问卷
+        function generateQuestionnaire() {
+            const container = document.getElementById('questionnaire');
+            container.innerHTML = '';
+            
+            questions.forEach(question => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                const questionText = document.createElement('div');
+                questionText.innerHTML = `<span class="question-number">${question.id}.</span> ${question.text}`;
+                questionDiv.appendChild(questionText);
+                
+                // 添加英文问题
+                const engQuestionText = document.createElement('div');
+                engQuestionText.className = 'eng-question';
+                engQuestionText.innerHTML = `<span class="eng-text">${question.eng_text}</span>`;
+                engQuestionText.style.color = '#666';
+                engQuestionText.style.fontSize = '0.9em';
+                engQuestionText.style.fontStyle = 'italic';
+                engQuestionText.style.marginTop = '5px';
+                questionDiv.appendChild(engQuestionText);
+                
+                const options = document.createElement('div');
+                options.className = 'options';
+                
+                for (let i = 1; i <= 7; i++) {
+                    const option = document.createElement('div');
+                    option.className = 'option';
+                    
+                    const label = document.createElement('label');
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = `q${question.id}`;
+                    radio.value = i;
+                    radio.dataset.questionId = question.id;
+                    
+                    // 添加change事件监听器，标记已回答的问题
+                    radio.addEventListener('change', function() {
+                        const questionDiv = this.closest('.question');
+                        questionDiv.classList.add('answered');
+                        updateProgressBar();
+                    });
+                    
+                    label.appendChild(radio);
+                    label.appendChild(document.createTextNode(i));
+                    option.appendChild(label);
+                    options.appendChild(option);
+                }
+                
+                questionDiv.appendChild(options);
+                container.appendChild(questionDiv);
+            });
+        }
+
+        // 计算结果
+        function calculateResults() {
+            const results = {};
+            let calculationDetails = "<h3>计算过程</h3>";
+            
+            // 初始化每个类别的得分为0
+            categories.forEach(category => {
+                results[category.name] = 0;
+            });
+            
+            // 检查是否所有问题都已回答
+            let allAnswered = true;
+            let unansweredQuestions = [];
+            
+            questions.forEach(question => {
+                const radios = document.getElementsByName(`q${question.id}`);
+                let answered = false;
+                let questionDiv = null;
+                
+                for (let i = 0; i < radios.length; i++) {
+                    if (radios[i].checked) {
+                        answered = true;
+                        questionDiv = radios[i].closest('.question');
+                        break;
+                    }
+                }
+                
+                // 标记已回答的问题
+                if (answered && questionDiv) {
+                    questionDiv.classList.add('answered');
+                }
+                
+                if (!answered) {
+                    allAnswered = false;
+                    unansweredQuestions.push(question.id);
+                }
+            });
+            
+            if (!allAnswered) {
+                alert(`请回答所有问题！未回答的问题: ${unansweredQuestions.join(', ')}`);
+                
+                // 找到第一个未回答的问题并滚动到该位置
+                const firstUnansweredId = unansweredQuestions[0];
+                const firstUnansweredQuestion = document.querySelector(`.question input[data-question-id="${firstUnansweredId}"]`);
+                
+                if (firstUnansweredQuestion) {
+                    const questionDiv = firstUnansweredQuestion.closest('.question');
+                    questionDiv.scrollIntoView({ behavior: 'smooth' });
+                    firstUnansweredQuestion.focus();
+                }
+                
+                return;
+            }
+            
+            // 计算每个类别的得分
+            categories.forEach(category => {
+                calculationDetails += `<h4>${category.name}</h4><div class="calculation">`;
+                
+                category.items.forEach(itemId => {
+                    const radios = document.getElementsByName(`q${itemId}`);
+                    let value = 0;
+                    
+                    for (let i = 0; i < radios.length; i++) {
+                        if (radios[i].checked) {
+                            value = parseInt(radios[i].value);
+                            break;
+                        }
+                    }
+                    
+                    results[category.name] += value;
+                    calculationDetails += `问题 ${itemId}: ${value} 分<br>`;
+                });
+                
+                calculationDetails += `总分: ${results[category.name]} (${category.items.join(' + ')} = ${results[category.name]})<br></div>`;
+            });
+            
+            // 显示结果
+            document.getElementById('calculation-details').innerHTML = calculationDetails;
+            
+            const resultsTable = document.getElementById('results-table').getElementsByTagName('tbody')[0];
+            resultsTable.innerHTML = '';
+            
+            // 找出最高分
+            let maxScore = 0;
+            Object.values(results).forEach(score => {
+                if (score > maxScore) {
+                    maxScore = score;
+                }
+            });
+            
+            // 按得分从高到低排序并显示结果
+            Object.entries(results)
+                .sort((a, b) => b[1] - a[1])
+                .forEach(([category, score]) => {
+                    const row = resultsTable.insertRow();
+                    if (score === maxScore) {
+                        row.className = 'highest';
+                    }
+                    
+                    const cellCategory = row.insertCell(0);
+                    const cellScore = row.insertCell(1);
+                    
+                    cellCategory.textContent = category;
+                    cellScore.textContent = score;
+                });
+            
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 更新进度条
+        function updateProgressBar() {
+            const totalQuestions = questions.length;
+            let answeredQuestions = 0;
+            
+            questions.forEach(question => {
+                const radios = document.getElementsByName(`q${question.id}`);
+                for (let i = 0; i < radios.length; i++) {
+                    if (radios[i].checked) {
+                        answeredQuestions++;
+                        break;
+                    }
+                }
+            });
+            
+            const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+            document.querySelector('.progress-bar').style.width = `${progressPercentage}%`;
+            document.querySelector('.progress-text').textContent = `${answeredQuestions}/${totalQuestions}`;
+        }
+        
+        // 打乱题目顺序
+        function shuffleQuestions() {
+            // 保存当前答案
+            const answers = saveCurrentAnswers();
+            
+            // 打乱问题顺序
+            questions = [...originalQuestions];
+            for (let i = questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questions[i], questions[j]] = [questions[j], questions[i]];
+            }
+            
+            // 重新生成问卷
+            generateQuestionnaire();
+            
+            // 恢复之前的答案
+            restoreAnswers(answers);
+            
+            // 更新进度条
+            updateProgressBar();
+            
+            // 重新设置键盘导航
+            setupKeyboardNavigation();
+        }
+        
+        // 恢复默认题目顺序
+        function restoreDefaultOrder() {
+            // 保存当前答案
+            const answers = saveCurrentAnswers();
+            
+            // 恢复原始顺序
+            questions = [...originalQuestions];
+            
+            // 重新生成问卷
+            generateQuestionnaire();
+            
+            // 恢复之前的答案
+            restoreAnswers(answers);
+            
+            // 更新进度条
+            updateProgressBar();
+            
+            // 重新设置键盘导航
+            setupKeyboardNavigation();
+        }
+        
+        // 保存当前答案
+        function saveCurrentAnswers() {
+            const answers = {};
+            originalQuestions.forEach(question => {
+                const radios = document.getElementsByName(`q${question.id}`);
+                for (let i = 0; i < radios.length; i++) {
+                    if (radios[i].checked) {
+                        answers[question.id] = radios[i].value;
+                        break;
+                    }
+                }
+            });
+            return answers;
+        }
+        
+        // 恢复答案
+        function restoreAnswers(answers) {
+            Object.keys(answers).forEach(questionId => {
+                const radios = document.getElementsByName(`q${questionId}`);
+                const value = answers[questionId];
+                for (let i = 0; i < radios.length; i++) {
+                    if (radios[i].value === value) {
+                        radios[i].checked = true;
+                        const questionDiv = radios[i].closest('.question');
+                        questionDiv.classList.add('answered');
+                        break;
+                    }
+                }
+            });
+        }
+        
+        // 全局变量，用于存储键盘导航事件处理函数的引用
+        let keyboardNavigationHandler;
+        
+        // 添加键盘操作支持
+        function setupKeyboardNavigation() {
+            // 为每个问题添加键盘导航
+            const questionDivs = document.querySelectorAll('.question');
+            
+            // 移除所有current-focus类
+            document.querySelectorAll('.current-focus').forEach(el => {
+                el.classList.remove('current-focus');
+            });
+            
+            // 如果已经存在事件处理函数，先移除它
+            if (keyboardNavigationHandler) {
+                document.removeEventListener('keydown', keyboardNavigationHandler);
+            }
+            
+            // 创建新的事件处理函数并保存引用
+            keyboardNavigationHandler = function(e) {
+                // 当前聚焦的元素
+                const activeElement = document.activeElement;
+                const isRadioButton = activeElement.tagName === 'INPUT' && activeElement.type === 'radio';
+                
+                // 数字键1-7选择选项
+                if (e.key >= '1' && e.key <= '7' && isRadioButton) {
+                    const questionName = activeElement.name;
+                    const radios = document.getElementsByName(questionName);
+                    radios[parseInt(e.key) - 1].checked = true;
+                    updateProgressBar();
+                    e.preventDefault();
+                }
+                
+                // 上下键导航问题 - 修改为使用当前显示顺序而非原始顺序
+                if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && isRadioButton) {
+                    const currentQuestion = activeElement.closest('.question');
+                    
+                    // 获取所有当前显示的问题，按照DOM顺序
+                    const allVisibleQuestions = Array.from(document.querySelectorAll('.question'));
+                    const currentIndex = allVisibleQuestions.indexOf(currentQuestion);
+                    
+                    if (currentIndex !== -1) {
+                        let targetIndex;
+                        if (e.key === 'ArrowDown' && currentIndex < allVisibleQuestions.length - 1) {
+                            targetIndex = currentIndex + 1;
+                        } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+                            targetIndex = currentIndex - 1;
+                        }
+                        
+                        if (targetIndex !== undefined) {
+                            const targetQuestion = allVisibleQuestions[targetIndex];
+                            const targetRadios = targetQuestion.querySelectorAll('input[type="radio"]');
+                            if (targetRadios.length > 0) {
+                                // 找到当前选中的索引
+                                let currentOptionIndex = 0;
+                                const currentRadios = currentQuestion.querySelectorAll('input[type="radio"]');
+                                for (let i = 0; i < currentRadios.length; i++) {
+                                    if (currentRadios[i] === activeElement) {
+                                        currentOptionIndex = i;
+                                        break;
+                                    }
+                                }
+                                targetRadios[currentOptionIndex].focus();
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+                
+                // 左右键在选项间导航
+                if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && isRadioButton) {
+                    const questionName = activeElement.name;
+                    const radios = document.getElementsByName(questionName);
+                    let currentIndex = -1;
+                    
+                    for (let i = 0; i < radios.length; i++) {
+                        if (radios[i] === activeElement) {
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+                    
+                    if (currentIndex !== -1) {
+                        let targetIndex;
+                        if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                            targetIndex = currentIndex - 1;
+                        } else if (e.key === 'ArrowRight' && currentIndex < radios.length - 1) {
+                            targetIndex = currentIndex + 1;
+                        }
+                        
+                        if (targetIndex !== undefined) {
+                            radios[targetIndex].focus();
+                            e.preventDefault();
+                        }
+                    }
+                }
+            };
+            
+            // 添加新的事件监听器
+            document.addEventListener('keydown', keyboardNavigationHandler);
+            
+            // 为每个单选按钮添加change事件
+            const allRadios = document.querySelectorAll('input[type="radio"]');
+            allRadios.forEach(radio => {
+                radio.addEventListener('change', updateProgressBar);
+            });
+            
+            // 设置第一个问题的第一个选项为初始焦点
+            if (questionDivs.length > 0) {
+                const firstRadio = questionDivs[0].querySelector('input[type="radio"]');
+                if (firstRadio) {
+                    firstRadio.focus();
+                    firstRadio.closest('.question').classList.add('current-focus');
+                }
+            }
+        }
+        
+        // 添加焦点变化监听
+        document.addEventListener('focusin', function(e) {
+            if (e.target.tagName === 'INPUT' && e.target.type === 'radio') {
+                // 移除所有current-focus类
+                document.querySelectorAll('.current-focus').forEach(el => {
+                    el.classList.remove('current-focus');
+                });
+                
+                // 为当前焦点问题添加current-focus类
+                const questionDiv = e.target.closest('.question');
+                if (questionDiv) {
+                    questionDiv.classList.add('current-focus');
+                }
+            }
+        });
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            generateQuestionnaire();
+            document.getElementById('calculate').addEventListener('click', calculateResults);
+            document.getElementById('shuffle').addEventListener('click', shuffleQuestions);
+            document.getElementById('restore').addEventListener('click', restoreDefaultOrder);
+            document.getElementById('test-fill').addEventListener('click', testFill);
+            setupKeyboardNavigation();
+            setupe1e();
+        });
+        
+        // 一键测试填充功能
+        function testFill() {
+            const pattern = [0, 0, 1]; // 测试填充模式
+            
+            questions.forEach((question, index) => {
+                const patternIndex = index % pattern.length;
+                const value = pattern[patternIndex] + 1; // 转换为1-7的范围
+                
+                // 选中对应的单选按钮
+                const radios = document.getElementsByName(`q${question.id}`);
+                if (radios && radios.length >= value) {
+                    radios[value - 1].checked = true;
+                    const questionDiv = radios[0].closest('.question');
+                    questionDiv.classList.add('answered');
+                }
+            });
+            
+            // 更新进度条
+            updateProgressBar();
+        }
+        
+        // 彩蛋功能
+        function setupe1e() {
+            let keySequence = [];
+            const targetSequence = ['0', '1', '1', '2'];
+            
+            document.addEventListener('keydown', function(e) {
+                // 只在没有输入框聚焦时触发
+                if (document.activeElement.tagName !== 'INPUT') {
+                    keySequence.push(e.key);
+                    
+                    // 只保留最后4个按键
+                    if (keySequence.length > 4) {
+                        keySequence.shift();
+                    }
+                    
+                    // 检查是否匹配目标序列
+                    if (keySequence.join('') === targetSequence.join('')) {
+                        showe1e();
+                        keySequence = []; // 重置序列
+                    }
+                }
+            });
+        }
+        
+        // 显示
+        function showe1e() {
+            // 创建元素
+            const e1e = document.createElement('div');
+            e1e.className = 'e-1-e';
+            e1e.style.position = 'fixed';
+            e1e.style.top = '0';
+            e1e.style.left = '0';
+            e1e.style.width = '100%';
+            e1e.style.height = '100%';
+            e1e.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            e1e.style.display = 'flex';
+            e1e.style.flexDirection = 'column';
+            e1e.style.justifyContent = 'center';
+            e1e.style.alignItems = 'center';
+            e1e.style.zIndex = '2000';
+            e1e.style.color = 'white';
+            e1e.style.textAlign = 'center';
+            e1e.style.padding = '20px';
+            e1e.style.animation = 'fadeIn 0.5s';
+            
+            // 添加样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes colorChange {
+                    0% { color: #ff5252; }
+                    25% { color: #ffeb3b; }
+                    50% { color: #4caf50; }
+                    75% { color: #2196f3; }
+                    100% { color: #ff5252; }
+                }
+                .e-1-e-title {
+                    font-size: 2.5em;
+                    margin-bottom: 20px;
+                    font-weight: bold;
+                    animation: colorChange 4s infinite;
+                }
+                .e-1-e-content {
+                    font-size: 1.5em;
+                    margin-bottom: 30px;
+                    line-height: 1.6;
+                }
+                .e-1-e-credit {
+                    font-size: 1.2em;
+                    margin-top: 20px;
+                    font-style: italic;
+                }
+                .e-1-e-close {
+                    margin-top: 30px;
+                    padding: 10px 20px;
+                    background-color: #3498db;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 1em;
+                    transition: background-color 0.3s;
+                }
+                .e-1-e-close:hover {
+                    background-color: #2980b9;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // 设内容
+            e1e.innerHTML = `
+                <div class="e-1-e-title">✨ 诸事皆宜 ✨</div>
+                <div class="e-1-e-content">
+                    明天会是好天气<br>
+                    适合大步的 前进~
+                </div>
+                <div class="e-1-e-credit">由「牛人」倾情开发</div>
+                <button class="e-1-e-close">关闭</button>
+            `;
+            
+            document.body.appendChild(e1e);
+            
+            // 添加关闭按钮事件
+            e1e.querySelector('.e-1-e-close').addEventListener('click', function() {
+                e1e.style.animation = 'fadeOut 0.5s';
+                setTimeout(() => {
+                    document.body.removeChild(e1e);
+                }, 500);
+            });
+        }
+    </script>
+    <script src="guide.js"></script>
+</body>
+</html>
+<div class="therapy-intro">
+    <h3>疗法介绍</h3>
+    <ul>
+        <li><strong>精神分析/心理动力学:</strong> 关注无意识过程和童年经历。</li>
+        <li><strong>阿德勒学派:</strong> 强调社会兴趣和个人目标。</li>
+        <li><strong>行为主义:</strong> 通过强化和惩罚改变行为。</li>
+        <li><strong>认知疗法:</strong> 改变思维模式以影响情绪和行为。</li>
+        <li><strong>现实治疗:</strong> 关注当前行为和责任。</li>
+        <li><strong>存在主义:</strong> 探索生命意义和个人自由。</li>
+        <li><strong>人本主义:</strong> 强调自我实现和个人成长。</li>
+        <li><strong>格式塔疗法:</strong> 关注整体体验和当下意识。</li>
+        <li><strong>多元文化咨询:</strong> 理解文化差异对治疗的影响。</li>
+        <li><strong>女性主义治疗:</strong> 探讨性别角色和社会不平等。</li>
+        <li><strong>家庭治疗:</strong> 关注家庭系统和互动模式。</li>
+        <li><strong>解决方案聚焦治疗:</strong> 强调解决方案而非问题。</li>
+        <li><strong>叙事治疗:</strong> 通过重述生活故事创造意义。</li>
+        <li><strong>优势本位治疗:</strong> 强调个人优势和资源。</li>
+        <li><strong>整合治疗方法:</strong> 灵活运用多种理论技术。</li>
+    </ul>
+</div>
+<style>
+    .therapy-intro {
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+    .therapy-intro h3 {
+        color: #2c3e50;
+        text-align: center;
+    }
+    .therapy-intro ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .therapy-intro li {
+        margin-bottom: 10px;
+    }
+    .therapy-intro strong {
+        color: #3498db;
+    }
+</style>
+</body>
+</html>
+</html>
+</html>
