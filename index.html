@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>心理治疗取向评估量表</title>
+    <title>心理咨询取向评估量表</title>
     <link rel="stylesheet" href="guide.css">
     <style>
         body {
@@ -37,8 +37,7 @@
         .progress-text {
             position: absolute;
             right: 10px;
-            color: #FFFFFF; /* 使用纯白色替代半透明白色 */
-            text-shadow: 0 0 3px rgba(75, 106, 155, 0.5); /* 添加文字阴影增加可读性 */
+            color: white;
             font-weight: bold;
             line-height: 20px;
             font-size: 12px;
@@ -163,7 +162,7 @@
     </style>
 </head>
 <body>
-    <h1>心理治疗取向评估量表</h1>
+    <h1>心理咨询取向评估量表</h1>
     
     <div class="progress-container">
         <div class="progress-bar">
@@ -197,7 +196,7 @@
         <table id="results-table">
             <thead>
                 <tr>
-                    <th>心理治疗取向</th>
+                    <th>心理咨询取向</th>
                     <th>得分</th>
                 </tr>
             </thead>
@@ -210,7 +209,7 @@
     <script>
         // 量表问题数据
         const originalQuestions = [
-            { id: 1, text: "移情在心理治疗中很有价值，因为它为来访者提供了重新体验童年早期感受的机会。", eng_text: "Transference is valuable in therapy because it gives clients the opportunity to re-experience early childhood feelings." },
+            { id: 1, text: "移情在心理咨询中很有价值，因为它为来访者提供了重新体验童年早期感受的机会。", eng_text: "Transference is valuable in therapy because it gives clients the opportunity to re-experience early childhood feelings." },
             { id: 2, text: "人格的社会决定因素比心理性决定因素更为重要。", eng_text: "Social determinants of personality are more important than psychological determinants." },
             { id: 3, text: "治疗师应当挑战来访者不真实的生活方式。", eng_text: "Therapists should challenge clients' inauthentic ways of living." },
             { id: 4, text: "我喜欢设计实验来增强来访者对自身行为的自我意识以及他们如何进行这些行为。", eng_text: "I like to design experiments to increase clients' self-awareness of their behaviors and how they do them." },
@@ -231,7 +230,7 @@
             { id: 19, text: "在治疗中，我认为比起谈论感受和经历，让来访者在治疗过程中重新体验这些感受更为重要。", eng_text: "In therapy, I believe it is more important for clients to re-experience feelings in the therapy session than to talk about feelings and experiences." },
             { id: 20, text: "当家庭中的个体出现问题时，治疗师可以通过检查家庭沟通和关系问题来提供帮助。", eng_text: "When individuals in families have problems, therapists can help by examining family communication and relationship issues." },
             { id: 21, text: "当来访者理解其问题的历史根源，并明确了童年问题如何影响当前情况时，他们更容易终止治疗。", eng_text: "Clients are more likely to terminate therapy when they understand the historical roots of their problems and how childhood issues affect their current situation." },
-            { id: 22, text: "心理治疗的主要主题涉及意义、自由、责任、孤独、疏离、死亡及其对生活的影响。", eng_text: "The major themes of psychotherapy involve meaning, freedom, responsibility, isolation, alienation, death, and their impact on life." },
+            { id: 22, text: "心理咨询的主要主题涉及意义、自由、责任、孤独、疏离、死亡及其对生活的影响。", eng_text: "The major themes of psychotherapy involve meaning, freedom, responsibility, isolation, alienation, death, and their impact on life." },
             { id: 23, text: "每个人都发展出独特的生活方式，我将在治疗中探索这一点。", eng_text: "Each person develops a unique lifestyle, which I will explore in therapy." },
             { id: 24, text: "治疗师应鼓励来访者对他们在世界中的选择方式承担责任。", eng_text: "Therapists should encourage clients to take responsibility for how they choose in the world." },
             { id: 25, text: "治疗师通过恢复健康的家庭组织结构来帮助来访者产生变化。", eng_text: "Therapists help clients create change by restoring healthy family organizational structures." },
@@ -242,7 +241,7 @@
             { id: 30, text: "否认、压抑、理智化和其他防御机制是理解治疗的核心。", eng_text: "Denial, repression, rationalization, and other defense mechanisms are central to understanding therapy." },
             { id: 31, text: "教导来访者应对问题的技巧很重要。", eng_text: "It is important to teach clients skills for coping with problems." },
             { id: 32, text: "在治疗方面没有一种最佳理论。（整合性）", eng_text: "There is no one best theory in terms of treatment. (Integrative)" },
-            { id: 33, text: "我不认为治疗师应该只精通一种心理治疗理论。", eng_text: "I do not believe that therapists should be skilled in only one theory of psychotherapy." },
+            { id: 33, text: "我不认为治疗师应该只精通一种心理咨询理论。", eng_text: "I do not believe that therapists should be skilled in only one theory of psychotherapy." },
             { id: 34, text: "人们追求自我实现，治疗师应该熟练掌握促进这一过程的技能。", eng_text: "People strive for self-actualization, and therapists should be skilled in facilitating this process." },
             { id: 35, text: "非理性信念是情绪困扰的主要原因。", eng_text: "Irrational beliefs are the primary cause of emotional disturbance." },
             { id: 36, text: "人们学习适应性和不适应性行为。", eng_text: "People learn adaptive and maladaptive behaviors." },
@@ -335,6 +334,45 @@
                 
                 const options = document.createElement('div');
                 options.className = 'options';
+                
+                // 为第12题添加特殊的'01'选项
+                if (question.id === 12) {
+                    // 添加特殊的'01'选项
+                    const option01 = document.createElement('div');
+                    option01.className = 'option special-option';
+                    
+                    const label01 = document.createElement('label');
+                    const radio01 = document.createElement('input');
+                    radio01.type = 'radio';
+                    radio01.name = `q${question.id}`;
+                    radio01.value = 1; // 值等于1
+                    radio01.dataset.questionId = question.id;
+                    radio01.dataset.special = 'true';
+                    
+                    // 添加特殊样式
+                    label01.style.color = '#ff5252';
+                    label01.style.animation = 'colorChange 4s infinite';
+                    label01.style.fontWeight = 'bold';
+                    label01.style.fontSize = '1.2em';
+                    label01.style.textShadow = '0 0 5px rgba(255, 82, 82, 0.7)';
+                    label01.style.padding = '3px 8px';
+                    label01.style.borderRadius = '5px';
+                    label01.style.border = '1px dashed #ff5252';
+                    label01.style.boxShadow = '0 0 8px rgba(255, 82, 82, 0.5)';
+                    
+                    // 添加change事件监听器，标记已回答的问题并触发彩蛋
+                    radio01.addEventListener('change', function() {
+                        const questionDiv = this.closest('.question');
+                        questionDiv.classList.add('answered');
+                        updateProgressBar();
+                        showSpecialEasterEgg();
+                    });
+                    
+                    label01.appendChild(radio01);
+                    label01.appendChild(document.createTextNode('01'));
+                    option01.appendChild(label01);
+                    options.appendChild(option01);
+                }
                 
                 for (let i = 1; i <= 7; i++) {
                     const option = document.createElement('div');
@@ -572,8 +610,117 @@
             });
         }
         
-        // 全局变量，用于存储键盘导航事件处理函数的引用
-        let keyboardNavigationHandler;
+        // 特殊彩蛋显示函数
+        function showSpecialEasterEgg() {
+            // 创建彩蛋元素
+            const easterEgg = document.createElement('div');
+            easterEgg.className = 'easter-egg';
+            easterEgg.style.position = 'fixed';
+            easterEgg.style.top = '0';
+            easterEgg.style.left = '0';
+            easterEgg.style.width = '100%';
+            easterEgg.style.height = '100%';
+            easterEgg.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            easterEgg.style.display = 'flex';
+            easterEgg.style.flexDirection = 'column';
+            easterEgg.style.justifyContent = 'center';
+            easterEgg.style.alignItems = 'center';
+            easterEgg.style.zIndex = '2000';
+            easterEgg.style.color = '#FF6347'; // 橙红色
+            easterEgg.style.textAlign = 'center';
+            easterEgg.style.padding = '20px';
+            easterEgg.style.animation = 'fadeIn 0.5s';
+            
+            // 添加样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; }
+                    to { opacity: 0; }
+                }
+                @keyframes colorChange {
+                    0% { color: #ff5252; }
+                    25% { color: #ffeb3b; }
+                    50% { color: #4caf50; }
+                    75% { color: #2196f3; }
+                    100% { color: #ff5252; }
+                }
+                @keyframes blink {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.5; }
+                }
+                .easter-egg-title {
+                    font-size: 2.5em;
+                    margin-bottom: 20px;
+                    font-weight: bold;
+                    animation: colorChange 4s infinite;
+                }
+                .easter-egg-content {
+                    font-size: 1.5em;
+                    margin-bottom: 30px;
+                    line-height: 1.6;
+                }
+                .easter-egg-credit {
+                    font-size: 1.2em;
+                    margin-top: 20px;
+                    font-style: italic;
+                }
+                .easter-egg-hint {
+                    font-size: 0.9em;
+                    margin-top: 10px;
+                    color: #666;
+                }
+                .easter-egg-close {
+                    margin-top: 30px;
+                    padding: 10px 20px;
+                    background-color: #3498db;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 1em;
+                    transition: background-color 0.3s;
+                }
+                .easter-egg-close:hover {
+                    background-color: #2980b9;
+                }
+                .cake-icon {
+                    font-size: 3em;
+                    margin-bottom: 20px;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // 设置彩蛋内容
+            easterEgg.innerHTML = `
+                <div class="cake-icon">🎂</div>
+                <div class="easter-egg-title">✨ 诸事皆宜 ✨</div>
+                <div class="easter-egg-content">
+                    明天会是好天气<br>
+                    适合大步的 前进~
+                </div>
+                <div class="easter-egg-credit">由「牛人」倾情开发<br> 🎂 January 12, 2005 🎂</div>
+                <div class="easter-egg-hint">提示：可通过数字键盘输入4位生日日期寻找彩蛋2</div>
+                <button class="easter-egg-close">好诶</button>
+            `;
+            
+            document.body.appendChild(easterEgg);
+            
+            // 添加关闭按钮事件
+            easterEgg.querySelector('.easter-egg-close').addEventListener('click', function() {
+                easterEgg.style.animation = 'fadeOut 0.5s';
+                setTimeout(() => {
+                    document.body.removeChild(easterEgg);
+                }, 500);
+            });
+        }
+        
+        // 存储键盘导航事件监听器的引用
+        let keyboardNavigationHandler = null;
         
         // 添加键盘操作支持
         function setupKeyboardNavigation() {
@@ -585,12 +732,12 @@
                 el.classList.remove('current-focus');
             });
             
-            // 如果已经存在事件处理函数，先移除它
+            // 如果已存在键盘导航事件监听器，先移除它
             if (keyboardNavigationHandler) {
                 document.removeEventListener('keydown', keyboardNavigationHandler);
             }
             
-            // 创建新的事件处理函数并保存引用
+            // 创建新的键盘导航事件处理函数
             keyboardNavigationHandler = function(e) {
                 // 当前聚焦的元素
                 const activeElement = document.activeElement;
@@ -600,7 +747,18 @@
                 if (e.key >= '1' && e.key <= '7' && isRadioButton) {
                     const questionName = activeElement.name;
                     const radios = document.getElementsByName(questionName);
-                    radios[parseInt(e.key) - 1].checked = true;
+                    const selectedIndex = parseInt(e.key) - 1;
+                    radios[selectedIndex].checked = true;
+                    
+                    // 添加选中效果
+                    const questionDiv = activeElement.closest('.question');
+                    questionDiv.classList.add('answered');
+                    
+                    // 检查是否是第12题的01选项
+                    if (questionName === 'q12' && e.key === '1' && radios[0].dataset.special === 'true') {
+                        showSpecialEasterEgg();
+                    }
+                    
                     updateProgressBar();
                     e.preventDefault();
                 }
@@ -670,7 +828,7 @@
                 }
             };
             
-            // 添加新的事件监听器
+            // 添加新的键盘导航事件监听器
             document.addEventListener('keydown', keyboardNavigationHandler);
             
             // 为每个单选按钮添加change事件
@@ -713,12 +871,12 @@
             document.getElementById('restore').addEventListener('click', restoreDefaultOrder);
             document.getElementById('test-fill').addEventListener('click', testFill);
             setupKeyboardNavigation();
-            setupe1e();
+            setupEasterEgg();
         });
         
         // 一键测试填充功能
         function testFill() {
-            const pattern = [0, 0, 1]; // 测试填充模式
+            const pattern = [0, 0, 1]; // 测试填充模式改为0112
             
             questions.forEach((question, index) => {
                 const patternIndex = index % pattern.length;
@@ -738,7 +896,7 @@
         }
         
         // 彩蛋功能
-        function setupe1e() {
+        function setupEasterEgg() {
             let keySequence = [];
             const targetSequence = ['0', '1', '1', '2'];
             
@@ -754,33 +912,33 @@
                     
                     // 检查是否匹配目标序列
                     if (keySequence.join('') === targetSequence.join('')) {
-                        showe1e();
+                        showEasterEgg();
                         keySequence = []; // 重置序列
                     }
                 }
             });
         }
         
-        // 显示
-        function showe1e() {
-            // 创建元素
-            const e1e = document.createElement('div');
-            e1e.className = 'e-1-e';
-            e1e.style.position = 'fixed';
-            e1e.style.top = '0';
-            e1e.style.left = '0';
-            e1e.style.width = '100%';
-            e1e.style.height = '100%';
-            e1e.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-            e1e.style.display = 'flex';
-            e1e.style.flexDirection = 'column';
-            e1e.style.justifyContent = 'center';
-            e1e.style.alignItems = 'center';
-            e1e.style.zIndex = '2000';
-            e1e.style.color = 'white';
-            e1e.style.textAlign = 'center';
-            e1e.style.padding = '20px';
-            e1e.style.animation = 'fadeIn 0.5s';
+        // 显示彩蛋
+        function showEasterEgg() {
+            // 创建彩蛋元素
+            const easterEgg = document.createElement('div');
+            easterEgg.className = 'easter-egg';
+            easterEgg.style.position = 'fixed';
+            easterEgg.style.top = '0';
+            easterEgg.style.left = '0';
+            easterEgg.style.width = '100%';
+            easterEgg.style.height = '100%';
+            easterEgg.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            easterEgg.style.display = 'flex';
+            easterEgg.style.flexDirection = 'column';
+            easterEgg.style.justifyContent = 'center';
+            easterEgg.style.alignItems = 'center';
+            easterEgg.style.zIndex = '2000';
+            easterEgg.style.color = 'white';
+            easterEgg.style.textAlign = 'center';
+            easterEgg.style.padding = '20px';
+            easterEgg.style.animation = 'fadeIn 0.5s';
             
             // 添加样式
             const style = document.createElement('style');
@@ -796,23 +954,23 @@
                     75% { color: #2196f3; }
                     100% { color: #ff5252; }
                 }
-                .e-1-e-title {
+                .easter-egg-title {
                     font-size: 2.5em;
                     margin-bottom: 20px;
                     font-weight: bold;
                     animation: colorChange 4s infinite;
                 }
-                .e-1-e-content {
+                .easter-egg-content {
                     font-size: 1.5em;
                     margin-bottom: 30px;
                     line-height: 1.6;
                 }
-                .e-1-e-credit {
+                .easter-egg-credit {
                     font-size: 1.2em;
                     margin-top: 20px;
                     font-style: italic;
                 }
-                .e-1-e-close {
+                .easter-egg-close {
                     margin-top: 30px;
                     padding: 10px 20px;
                     background-color: #3498db;
@@ -823,30 +981,32 @@
                     font-size: 1em;
                     transition: background-color 0.3s;
                 }
-                .e-1-e-close:hover {
+                .easter-egg-close:hover {
                     background-color: #2980b9;
                 }
             `;
             document.head.appendChild(style);
             
-            // 设内容
-            e1e.innerHTML = `
-                <div class="e-1-e-title">✨ 诸事皆宜 ✨</div>
-                <div class="e-1-e-content">
-                    明天会是好天气<br>
-                    适合大步的 前进~
+            // 设置彩蛋内容
+            easterEgg.innerHTML = `
+                <div class="easter-egg-title">✨ 诸事皆宜 ✨</div>
+                <div class="easter-egg-content">
+                    总有人在乎<br>
+                    总有人羡慕<br>
+                    总有人与你同路
                 </div>
-                <div class="e-1-e-credit">由「牛人」倾情开发</div>
-                <button class="e-1-e-close">关闭</button>
+                <div class="easter-egg-credit">由「牛人」倾情开发<br> 🎂 0112 🎂</div>
+                <div class="easter-egg-hint">提示：可通过12题选项寻找彩蛋1</div>
+                <button class="easter-egg-close">好诶</button>
             `;
             
-            document.body.appendChild(e1e);
+            document.body.appendChild(easterEgg);
             
             // 添加关闭按钮事件
-            e1e.querySelector('.e-1-e-close').addEventListener('click', function() {
-                e1e.style.animation = 'fadeOut 0.5s';
+            easterEgg.querySelector('.easter-egg-close').addEventListener('click', function() {
+                easterEgg.style.animation = 'fadeOut 0.5s';
                 setTimeout(() => {
-                    document.body.removeChild(e1e);
+                    document.body.removeChild(easterEgg);
                 }, 500);
             });
         }
@@ -855,23 +1015,27 @@
 </body>
 </html>
 <div class="therapy-intro">
-    <h3>疗法介绍</h3>
+    <h3>来自deepseek的流派锐评</h3>
     <ul>
-        <li><strong>精神分析/心理动力学:</strong> 关注无意识过程和童年经历。</li>
-        <li><strong>阿德勒学派:</strong> 强调社会兴趣和个人目标。</li>
-        <li><strong>行为主义:</strong> 通过强化和惩罚改变行为。</li>
-        <li><strong>认知疗法:</strong> 改变思维模式以影响情绪和行为。</li>
-        <li><strong>现实治疗:</strong> 关注当前行为和责任。</li>
-        <li><strong>存在主义:</strong> 探索生命意义和个人自由。</li>
-        <li><strong>人本主义:</strong> 强调自我实现和个人成长。</li>
-        <li><strong>格式塔疗法:</strong> 关注整体体验和当下意识。</li>
-        <li><strong>多元文化咨询:</strong> 理解文化差异对治疗的影响。</li>
-        <li><strong>女性主义治疗:</strong> 探讨性别角色和社会不平等。</li>
-        <li><strong>家庭治疗:</strong> 关注家庭系统和互动模式。</li>
-        <li><strong>解决方案聚焦治疗:</strong> 强调解决方案而非问题。</li>
-        <li><strong>叙事治疗:</strong> 通过重述生活故事创造意义。</li>
-        <li><strong>优势本位治疗:</strong> 强调个人优势和资源。</li>
-        <li><strong>整合治疗方法:</strong> 灵活运用多种理论技术。</li>
+        <ul>
+            <ul>
+                <li><strong>精神分析/心理动力学:</strong> "像考古学家一样挖掘记忆碎片，童年经历可能比你家的旧相册还精彩！"</li>
+                <li><strong>阿德勒学派:</strong> "人生不是单机游戏，你的社会队友和成长任务已加入群聊~"</li>
+                <li><strong>行为主义:</strong> "给行为装个GPS：奖励是加油站，惩罚是绕路提醒"</li>
+                <li><strong>认知疗法:</strong> "给大脑安装思维滤镜，把'完蛋了'自动翻译成'有点挑战'"</li>
+                <li><strong>现实治疗:</strong> "活在当下模式已启动，责任担当正在加载中..."</li>
+                <li><strong>存在主义:</strong> "哲学咖啡馆营业中，今天的特调是'自由与意义浓缩咖啡'"</li>
+                <li><strong>人本主义:</strong> "你的人生花园，我们只负责浇水，开花的事交给阳光和你"</li>
+                <li><strong>格式塔疗法:</strong> "此刻体验值MAX！未完成事项正在生成全息投影..."</li>
+                <li><strong>多元文化咨询:</strong> "世界是个调色盘，你的文化底色正在生成专属色谱"</li>
+                <li><strong>女性主义治疗:</strong> "检测到系统默认设置，是否个性化加载？"</li>
+                <li><strong>家庭治疗:</strong> "家庭关系像Wi-Fi信号，现在开始优化每个人的连接频道"</li>
+                <li><strong>解决方案聚焦治疗:</strong> "问题？不存在的！我们只是还没找到藏钥匙的正确花盆"</li>
+                <li><strong>叙事治疗:</strong> "故事编辑模式启动，反派角色正在转化为成长NPC"</li>
+                <li><strong>优势本位治疗:</strong> "你的超能力已到账，请查收隐藏技能使用说明书"</li>
+                <li><strong>整合治疗方法:</strong> "心理工具箱已升级，现在支持多流派组合技！"</li>
+            </ul>
+</ul>
     </ul>
 </div>
 <style>
@@ -897,6 +1061,5 @@
     }
 </style>
 </body>
-</html>
 </html>
 </html>
