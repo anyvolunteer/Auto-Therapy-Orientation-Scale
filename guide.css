@@ -105,7 +105,7 @@
     padding: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     max-width: 300px;
-    z-index: 1003;
+    z-index: 1005;
     margin: 0 20px; /* 添加水平边距，避免过于靠边 */
 }
 
@@ -120,6 +120,33 @@
     font-size: 1.2em;
     color: #3498db;
     margin-bottom: 10px;
+}
+
+/* 彩蛋提示步骤的红色调样式 */
+.tutorial-step[data-easter-egg="true"] {
+    background-color: #fff8f8;
+    border: 1px solid #ffcccc;
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+}
+
+.tutorial-step[data-easter-egg="true"] .tutorial-title {
+    color: #e74c3c;
+}
+
+.tutorial-step[data-easter-egg="true"] .tutorial-content {
+    color: #c0392b;
+}
+
+.tutorial-step[data-easter-egg="true"] .tutorial-button-next {
+    background-color: #e74c3c;
+}
+
+.tutorial-step[data-easter-egg="true"] .tutorial-button-next:hover {
+    background-color: #c0392b;
+}
+
+.tutorial-step[data-easter-egg="true"] .tutorial-arrow-bottom {
+    border-color: #fff8f8 transparent transparent transparent;
 }
 
 .tutorial-content {
