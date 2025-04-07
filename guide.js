@@ -23,17 +23,17 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="help-section">
             <h3 class="help-section-title">功能介绍</h3>
             <div class="help-section-content">
-                <p>这是一个用于评估个人心理治疗理论取向偏好的量表。通过回答76个问题，系统会计算出您在15种不同心理治疗取向上的得分，帮助您了解自己的理论倾向。</p>
+                <p>这是一个用于评估个人心理咨询理论取向偏好的量表。通过回答76个问题，系统会计算出您在15种不同心理咨询取向上的得分，帮助您了解自己的理论倾向。</p>
                 <ul>
                     <li>包含76个评估问题，每个问题提供中英文双语显示</li>
                     <li>支持1-7分的李克特量表评分方式</li>
                     <li>实时显示问卷完成进度</li>
-                    <li>自动计算15种不同心理治疗取向的得分</li>
+                    <li>自动计算15种不同心理咨询取向的得分</li>
                     <li>按得分从高到低排序显示结果</li>
                     <li>高亮显示得分最高的治疗取向</li>
                     <li>提供详细的计算过程说明</li>
                     <li>新手引导功能，帮助快速了解使用方法</li>
-                    <li>一键测试填充功能，使用0💕112循环模式快速填写</li>
+                    <li>一键测试填充功能，使用0🍰112循环模式快速填写</li>
                     <li>完成作答后提供重新开始选项</li>
                 </ul>
             </div>
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <li>阅读指导说明，了解评分标准</li>
                     <li>对每个问题选择1-7分的评分（1=强烈不同意，7=强烈同意）</li>
                     <li>回答完所有问题后，点击"计算结果"按钮</li>
-                    <li>查看您在各个心理治疗取向上的得分结果</li>
+                    <li>查看您在各个心理咨询取向上的得分结果</li>
                     <li>如需重新开始，可点击完成提示中的"重新开始"按钮</li>
                 </ol>
             </div>
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="help-section-content">
                 <ul>
                     <li>本量表仅供参考，不应作为专业心理评估的替代</li>
-                    <li>结果反映的是您对不同心理治疗理论的偏好，而非专业能力</li>
+                    <li>结果反映的是您对不同心理咨询理论的偏好，而非专业能力</li>
                     <li>建议在专业指导下解读结果</li>
                 </ul>
             </div>
@@ -83,6 +83,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <li>完全在客户端运行，不会收集或发送任何数据</li>
                     <li>兼容所有现代浏览器</li>
                 </ul>
+            </div>
+        </div>
+        
+        <div class="help-section">
+            <h3 class="help-section-title">彩蛋提示</h3>
+            <div class="help-section-content">
+                <p style="color: #e74c3c;">本应用隐藏了一个与🎂作者生日🎂有关的彩蛋，放在题目选项里，藏在键盘输入中，尝试发现它吧！</p>
             </div>
         </div>
         
@@ -202,6 +209,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     const windowWidth = window.innerWidth;
                     helpButton.style.left = (windowWidth * 0.75) + 'px';
                 }
+            },
+            {
+                target: 'body', // 不需要高亮特定元素，使用body作为目标
+                title: '2个彩蛋提示🍰',
+                content: '本应用隐藏了2个与🎂作者生日🎂有关的彩蛋，放在题目选项里，藏在键盘输入中，尝试发现它吧！',
+                position: 'bottom',
+                isEasterEggTip: true, // 标记这是彩蛋提示
+                onShow: function() {
+                    // 不需要高亮显示任何元素
+                    document.querySelectorAll('.tutorial-highlight').forEach(el => {
+                        el.classList.remove('tutorial-highlight');
+                    });
+                }
             }
         ];
         
@@ -238,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // 高亮目标元素
+            // 先高亮目标元素
             targetElement.classList.add('tutorial-highlight');
             
             // 如果步骤有onShow回调，执行它
@@ -246,39 +266,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 step.onShow();
             }
             
-            // 创建步骤元素
-            const stepElement = document.createElement('div');
-            stepElement.className = 'tutorial-step';
-            
-            // 设置步骤内容
-            stepElement.innerHTML = `
-                <div class="tutorial-step-number">${stepIndex + 1}/${steps.length}</div>
-                <div class="tutorial-title">${step.title}</div>
-                <div class="tutorial-content">${step.content}</div>
-                <div class="tutorial-buttons">
-                    <button class="tutorial-button tutorial-button-skip">跳过引导</button>
-                    <button class="tutorial-button tutorial-button-next">${stepIndex === steps.length - 1 ? '完成' : '下一步'}</button>
-                </div>
-                <div class="tutorial-arrow tutorial-arrow-${step.position}"></div>
-            `;
-            
-            document.body.appendChild(stepElement);
-            
-            // 定位步骤元素
-            positionStepElement(stepElement, targetElement, step.position);
-            
-            // 添加按钮事件
-            stepElement.querySelector('.tutorial-button-next').addEventListener('click', function() {
-                showStep(stepIndex + 1);
-            });
-            
-            stepElement.querySelector('.tutorial-button-skip').addEventListener('click', function() {
-                tutorialOverlay.style.display = 'none';
-                document.querySelectorAll('.tutorial-highlight').forEach(el => {
-                    el.classList.remove('tutorial-highlight');
+            // 延迟显示引导步骤说明文本
+            setTimeout(() => {
+                // 创建步骤元素
+                const stepElement = document.createElement('div');
+                stepElement.className = 'tutorial-step';
+                stepElement.style.opacity = '0';
+                stepElement.style.transition = 'opacity 0.3s ease';
+                
+                // 如果是彩蛋提示步骤，添加data-easter-egg属性
+                if (step.isEasterEggTip) {
+                    stepElement.setAttribute('data-easter-egg', 'true');
+                }
+                
+                // 设置步骤内容
+                stepElement.innerHTML = `
+                    <div class="tutorial-step-number">${stepIndex + 1}/${steps.length}</div>
+                    <div class="tutorial-title">${step.title}</div>
+                    <div class="tutorial-content">${step.content}</div>
+                    <div class="tutorial-buttons">
+                        <button class="tutorial-button tutorial-button-skip">跳过引导</button>
+                        <button class="tutorial-button tutorial-button-next">${stepIndex === steps.length - 1 ? '完成' : '下一步'}</button>
+                    </div>
+                    <div class="tutorial-arrow tutorial-arrow-${step.position}"></div>
+                `;
+                
+                document.body.appendChild(stepElement);
+                
+                // 定位步骤元素
+                positionStepElement(stepElement, targetElement, step.position);
+                
+                // 添加按钮事件
+                stepElement.querySelector('.tutorial-button-next').addEventListener('click', function() {
+                    showStep(stepIndex + 1);
                 });
-                stepElement.remove();
-            });
+                
+                stepElement.querySelector('.tutorial-button-skip').addEventListener('click', function() {
+                    tutorialOverlay.style.display = 'none';
+                    document.querySelectorAll('.tutorial-highlight').forEach(el => {
+                        el.classList.remove('tutorial-highlight');
+                    });
+                    stepElement.remove();
+                });
+            
+                // 触发渐入动画
+                requestAnimationFrame(() => {
+                    stepElement.style.opacity = '1';
+                });
+            }, 300);
         }
         
         // 定位步骤元素
@@ -338,30 +373,29 @@ document.addEventListener('DOMContentLoaded', function() {
                         completionMessage.style.top = '50%';
                         completionMessage.style.left = '50%';
                         completionMessage.style.transform = 'translate(-50%, -50%)';
-                        completionMessage.style.backgroundColor = 'rgba(76, 175, 80, 0.9)';
+                        completionMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
                         completionMessage.style.color = 'white';
                         completionMessage.style.padding = '20px';
                         completionMessage.style.borderRadius = '10px';
-                        completionMessage.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                        completionMessage.style.boxShadow = '0 0 20px rgba(0, 0, 0, 0.5)';
                         completionMessage.style.zIndex = '2000';
                         completionMessage.style.textAlign = 'center';
                         completionMessage.style.maxWidth = '80%';
-                        completionMessage.style.animation = 'fadeIn 0.5s';
-                        
                         completionMessage.innerHTML = `
-                            <h3 style="margin-top: 0;">恭喜您完成作答！</h3>
+                            <h2 style="margin-top: 0; color:rgb(229, 220, 255);">！恭喜您完成教程 ！</h2>
                             <p>感谢您的好奇心、求知欲</p>
-                            与自己对内心关照。</p>
-                            <p>您现在可以点击【页面底部的】"计算结果"按钮</p>
-                            <p>查看您的心理治疗取向评估结果。</p>
-                            <p>【点击关闭按钮】或者【双击鼠标】关闭通话框</p>
-                            <button id="restart-test" style="background-color: #3498db; color: white; border: none; padding: 8px 16px; margin-right: 10px; border-radius: 4px; cursor: pointer;">重新开始</button>
-                            <button id="close-message" style="background-color: white; color: #4CAF50; border: none; padding: 8px 16px; margin-top: 10px; border-radius: 4px; cursor: pointer;">双击任何区域以关闭</button>
+                            <p>与自己对内心的关照</p>
+                            <p>您现在可以点击下方按钮 </p>
+                            <p>开始测试 or 预览模拟结果 </p>
+                            <p>(预览后请您刷新浏览器已重开)</p>
+                            <button id="restart-test" style="background-color: #3498db; color: white; border: none; padding: 8px 16px; margin-right: 10px; border-radius: 4px; cursor: pointer;">现在开始测试</button>
+                            <button id="calculate-result" style="background-color: #2ecc71; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">预览模拟结果</button>
                         `;
                         
                         document.body.appendChild(completionMessage);
                         
-                        document.getElementById('close-message').addEventListener('click', function() {
+                        document.getElementById('calculate-result').addEventListener('click', function() {
+                            document.getElementById('calculate').click();
                             document.body.removeChild(completionMessage);
                         });
                         
@@ -380,19 +414,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             // 关闭提示
                             document.body.removeChild(completionMessage);
                         });
-                        
-                        // 添加双击关闭功能
-                        document.addEventListener('dblclick', function(e) {
-                            // 确保双击的不是按钮
-                            if (!e.target.matches('button')) {
-                                const completionMessage = document.querySelector('.completion-message');
-                                if (completionMessage) {
-                                    document.body.removeChild(completionMessage);
-                                }
-                            }
-                        });
-                        
-                        // 移除自动关闭功能，只有点击关闭按钮才能关闭提示
                     }
                 }, 500);
             }
@@ -496,3 +517,5 @@ function clearPageCache() {
     // 刷新页面
     location.reload();
 }
+
+// 特殊彩蛋函数已移至index.html中实现
